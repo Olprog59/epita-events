@@ -16,6 +16,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 @Entity
@@ -46,5 +47,9 @@ public class UserEntity {
 
   @ManyToMany(mappedBy = "participants")
   private List<EventEntity> participatingEvents = new ArrayList<>();
+
+  @OneToMany(mappedBy = "user")
+  @ToString.Exclude
+  private List<RegistrationEntity> registrations = new ArrayList<>();
 
 }

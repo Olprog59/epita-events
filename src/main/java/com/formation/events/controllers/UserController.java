@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.formation.events.dtos.users.UserDTORegister;
+import com.formation.events.dtos.users.UserRegisterReqDTO;
+import com.formation.events.dtos.users.UserRegisterRespDTO;
 import com.formation.events.dtos.users.UserMapper;
 import com.formation.events.entities.UserEntity;
 import com.formation.events.repositories.UserRepository;
@@ -52,15 +53,15 @@ public class UserController {
   }
 
   @PostMapping
-  public ResponseEntity<UserEntity> register(@Valid @RequestBody UserDTORegister userDTORegister) {
-    UserEntity user = UserMapper.userMapperDtoRegister(userDTORegister);
+  public ResponseEntity<UserRegisterRespDTO> register(@Valid @RequestBody UserRegisterReqDTO userDTORegister) {
+    UserEntity user = UserMapper.mapUserRegisterReqDTOToEntity(userDTORegister);
     try {
       userService.inscription(user);
     } catch (Exception e) {
       e.printStackTrace();
       return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
     }
-    return ResponseEntity.ok(user);
+    return ResponseEntity.ok(UserMapper.mapUserEntityToUserRegisterRespDTO(user));
   }
 
 }

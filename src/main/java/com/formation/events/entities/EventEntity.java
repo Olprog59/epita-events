@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.ToString;
@@ -52,4 +53,7 @@ public class EventEntity {
   @ToString.Exclude
   private List<UserEntity> participants = new ArrayList<>();
 
+  @OneToMany(mappedBy = "event")
+  @ToString.Exclude
+  private List<RegistrationEntity> registrations = new ArrayList<>();
 }
