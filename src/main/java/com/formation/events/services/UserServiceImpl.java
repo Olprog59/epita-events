@@ -55,6 +55,10 @@ public class UserServiceImpl implements IUserService {
       throw new Exception("données non valide");
     }
 
+    if (userRepository.existsByEmail(user.getEmail())) {
+      throw new Exception("Utilisateur deja present");
+    }
+
     return userRepository.save(user);
   }
 

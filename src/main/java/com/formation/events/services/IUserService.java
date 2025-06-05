@@ -18,4 +18,5 @@ public interface IUserService {
   void deleteById(Long id) throws Exception;
 
   void deleteByEmail(String email) throws Exception;
+
 }

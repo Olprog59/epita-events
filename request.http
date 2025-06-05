@@ -1,0 +1,22 @@
+###
+
+@path=http://localhost:8080/api
+
+GET {{path}}/users
+
+###
+
+GET {{path}}/users/1
+
+###
+
+POST {{path}}/users
+Accept: application/json
+Content-Type: application/json
+
+{
+ "email": "samuel.michaux@gmail",
+ "password": "samsamsam",
+ "firstName": "sam",
+ "lastName": "mich"
+}
