@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "events-epita",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

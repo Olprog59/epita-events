@@ -39,7 +39,7 @@ public class UserEntity {
   private String lastName;
 
   @Enumerated(EnumType.STRING)
-  private RoleEnum role;
+  private RoleEnum role = RoleEnum.PARTICIPANT;
 
   @OneToMany(mappedBy = "organizer")
   private List<EventEntity> organizedEvents = new ArrayList<>();
