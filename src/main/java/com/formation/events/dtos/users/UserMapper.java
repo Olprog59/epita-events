@@ -20,4 +20,12 @@ public class UserMapper {
     return new UserRegisterRespDTO(user.getEmail(), user.getFirstName(), user.getLastName());
   }
 
+  public static UserEntity mapUserLoginDTOToEntity(UserLoginDTO userDTO) {
+    UserEntity user = new UserEntity();
+    user.setEmail(userDTO.email());
+    user.setPassword(userDTO.password());
+
+    return user;
+  }
+
 }

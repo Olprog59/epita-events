@@ -10,13 +10,24 @@ GET {{path}}/users/1
 
 ###
 
-POST {{path}}/users
+POST {{path}}/auth/register
 Accept: application/json
 Content-Type: application/json
 
 {
  "email": "samuel.michaux@gmail",
- "password": "ssam",
+ "password": "Sam12345$",
  "firstName": "sam",
  "lastName": "mich"
 }
+
+###
+POST {{path}}/auth/login
+Accept: application/json
+Content-Type: application/json
+
+{
+ "email": "samuel.michaux@gmail",
+ "password": "Sam12345$"
+}
+

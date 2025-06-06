@@ -1,11 +1,11 @@
 meta {
-  name: Get User register
+  name: Register
   type: http
-  seq: 3
+  seq: 1
 }
 
 post {
-  url: {{path}}/users
+  url: {{path}}/auth/register
   body: json
   auth: inherit
 }
@@ -13,7 +13,7 @@ post {
 body:json {
   {
    "email": "samuel.michaux@gmail",
-   "password": "samsamsam",
+   "password": "Sam12345$",
    "firstName": "sam",
    "lastName": "mich"
   }

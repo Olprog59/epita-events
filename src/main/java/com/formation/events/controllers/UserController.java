@@ -52,16 +52,4 @@ public class UserController {
 
   }
 
-  @PostMapping
-  public ResponseEntity<UserRegisterRespDTO> register(@Valid @RequestBody UserRegisterReqDTO userDTORegister) {
-    UserEntity user = UserMapper.mapUserRegisterReqDTOToEntity(userDTORegister);
-    try {
-      userService.inscription(user);
-    } catch (Exception e) {
-      e.printStackTrace();
-      return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
-    }
-    return ResponseEntity.ok(UserMapper.mapUserEntityToUserRegisterRespDTO(user));
-  }
-
 }
