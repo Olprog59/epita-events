@@ -25,6 +25,7 @@ Content-Type: application/json
 POST {{path}}/auth/login
 Accept: application/json
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJlbWFpbCI6InNhbXVlbC5taWNoYXV4QGdtYWlsIiwic3ViIjoiNyIsImlhdCI6MTc0OTIxOTUwMCwiZXhwIjoxNzQ5MzA1OTAwfQ.am0US16TCZJTaYtn_YMNZYmImuvHsft5LrhMtAJiVSqyGa3Buf6H_wspGQiqxtaqi8z8VDLlhL5GdW3TV-VieA
 
 {
  "email": "samuel.michaux@gmail",
