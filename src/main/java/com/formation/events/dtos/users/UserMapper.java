@@ -28,4 +28,7 @@ public class UserMapper {
     return user;
   }
 
+  public static UserDTO mapUserEntityToUserDTO(UserEntity user) {
+    return new UserDTO(user.getId(), user.getLastName(), user.getFirstName(), user.getEmail(), user.getRole());
+  }
 }

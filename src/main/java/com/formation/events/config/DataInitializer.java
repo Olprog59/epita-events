@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.formation.events.entities.EventEntity;
@@ -24,6 +25,8 @@ public class DataInitializer implements CommandLineRunner {
   private final EventRepository eventRepository;
   private final RegistrationRepository registrationRepository;
 
+  private final PasswordEncoder passwordEncoder;
+
   @Override
   public void run(String... args) {
     // Vérifier si les données existent déjà pour éviter les doublons
@@ -35,14 +38,14 @@ public class DataInitializer implements CommandLineRunner {
     // Créer des organisateurs
     UserEntity organizer1 = createUser(
         "organizer1@test.com",
-        "password123",
+        passwordEncoder.encode("password123"),
         "Jean",
         "Organisateur",
         RoleEnum.ORGANIZER);
 
     UserEntity organizer2 = createUser(
         "organizer2@test.com",
-        "password123",
+        passwordEncoder.encode("password123"),
         "Marie",
         "Dupont",
         RoleEnum.ORGANIZER);
@@ -50,28 +53,28 @@ public class DataInitializer implements CommandLineRunner {
     // Créer des participants
     UserEntity participant1 = createUser(
         "participant1@test.com",
-        "password123",
+        passwordEncoder.encode("password123"),
         "Pierre",
         "Martin",
         RoleEnum.PARTICIPANT);
 
     UserEntity participant2 = createUser(
         "participant2@test.com",
-        "password123",
+        passwordEncoder.encode("password123"),
         "Sophie",
         "Bernard",
         RoleEnum.PARTICIPANT);
 
     UserEntity participant3 = createUser(
         "participant3@test.com",
-        "password123",
+        passwordEncoder.encode("password123"),
         "Luc",
         "Moreau",
         RoleEnum.PARTICIPANT);
 
     UserEntity participant4 = createUser(
         "participant4@test.com",
-        "password123",
+        passwordEncoder.encode("password123"),
         "Emma",
         "Leroy",
         RoleEnum.PARTICIPANT);

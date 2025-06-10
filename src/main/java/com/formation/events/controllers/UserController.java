@@ -3,24 +3,17 @@ package com.formation.events.controllers;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.formation.events.dtos.users.UserRegisterReqDTO;
-import com.formation.events.dtos.users.UserRegisterRespDTO;
-import com.formation.events.dtos.users.UserMapper;
 import com.formation.events.entities.UserEntity;
-import com.formation.events.repositories.UserRepository;
 import com.formation.events.services.IUserService;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -31,6 +24,7 @@ public class UserController {
   private final IUserService userService;
 
   @GetMapping
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<List<UserEntity>> getAll() {
     return ResponseEntity.ok(userService.getAll());
   }
