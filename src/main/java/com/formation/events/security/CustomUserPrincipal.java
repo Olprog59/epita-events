@@ -1,7 +1,6 @@
 package com.formation.events.security;
 
 import java.util.Collection;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;

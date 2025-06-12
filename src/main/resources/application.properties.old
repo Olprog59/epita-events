@@ -30,3 +30,14 @@ app.jwt.secret=694465dc03e5b027938425b3a38490b21b5f336c26e0b42d17942780a5d1ca5a3
 app.jwt.expiration=86400000
 
 app.cookie.name=jwt_token
+app.email.verification.url=http://localhost:8080/api/auth/verify-email
+
+
+spring.mail.host=localhost
+spring.mail.port=1025
+# spring.mail.properties.mail.smtp.starttls.enable=true
+# spring.mail.properties.mail.smtp.starttls.required=true
+spring.mail.properties.mail.smtp.auth=false
+spring.mail.properties.mail.smtp.connectiontimeout=5000
+spring.mail.properties.mail.smtp.timeout=5000
+spring.mail.properties.mail.smtp.writetimeout=5000

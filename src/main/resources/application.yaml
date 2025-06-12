@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: events
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/events"
+    driverClassName: org.postgresql.Driver
+    username: postgres
+    password: samsamsam
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  mail:
+    host: localhost
+    port: "1025"
+    properties:
+      mail:
+        smtp:
+          # starttls:
+          #   enable: true
+          #   required: true
+          auth: false
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+app:
+  jwt:
+    secret: >-
+      694465dc03e5b027938425b3a38490b21b5f336c26e0b42d17942780a5d1ca5a3c483cde7c372dfdfbaeed37b8213d687d626e484cd862191b6927d3d4d34bff
+    expiration: "86400000"
+  cookie:
+    name: jwt_token
+  email:
+    verification:
+      url: http://localhost:8080/api/auth/verify-email

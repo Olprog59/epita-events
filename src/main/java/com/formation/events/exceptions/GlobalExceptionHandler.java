@@ -1,6 +1,5 @@
 package com.formation.events.exceptions;
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 

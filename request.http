@@ -3,11 +3,17 @@
 @path=http://localhost:8080/api
 
 GET {{path}}/users
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJlbWFpbCI6InNhbXVlbC5taWNoYXV4QGdtYWlsIiwic3ViIjoiNyIsImlhdCI6MTc0OTU1MTA2NywiZXhwIjoxNzQ5NjM3NDY3fQ.oqxPsWTZyI2npCL4AJnMMQy6Pdi2y3DE0aRlcTty_zNZKaCD_uP3Hod0Lq4pGENrA3Aa5BLGBQfL9LCANKDWlA
+# @curl-global-cookie cookies.txt
 
 ###
 
 GET {{path}}/users/1
+# @curl-global-cookie cookies.txt
+
+### 
+
+GET {{path}}/events
+# @curl-global-cookie cookies.txt
 
 ###
 
@@ -16,19 +22,25 @@ Accept: application/json
 Content-Type: application/json
 
 {
- "email": "samuel.michaux@gmail",
+ "email": "samuel.michaux@ik.me",
  "password": "Sam12345$",
- "firstName": "sam",
- "lastName": "mich"
+ "firstName": "Samuel",
+ "lastName": "Michaux"
 }
 
-###
+### REQUEST_LOGIN
 POST {{path}}/auth/login
 Accept: application/json
 Content-Type: application/json
 
 {
- "email": "samuel.michaux@gmail",
+ "email": "samuel.michaux@ik.me",
  "password": "Sam12345$"
 }
+# @curl-global-cookie-jar cookies.txt
 
+###
+
+GET {{path}}/auth/test-email
+
+### 

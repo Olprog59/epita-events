@@ -1,5 +1,6 @@
 package com.formation.events.entities;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,5 +52,14 @@ public class UserEntity {
   @OneToMany(mappedBy = "user")
   @ToString.Exclude
   private List<RegistrationEntity> registrations = new ArrayList<>();
+
+  // mail
+  @Column(length = 100)
+  private String emailToken;
+
+  @Column(nullable = false)
+  private Boolean emailVerified = false;
+
+  private LocalDateTime verificationTokenExpiredAt;
 
 }

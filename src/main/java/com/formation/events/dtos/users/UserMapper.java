@@ -1,7 +1,5 @@
 package com.formation.events.dtos.users;
 
-import java.io.ObjectInputStream.GetField;
-
 import com.formation.events.entities.UserEntity;
 
 public class UserMapper {

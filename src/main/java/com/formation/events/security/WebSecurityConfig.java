@@ -1,5 +1,6 @@
 package com.formation.events.security;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import org.springframework.context.annotation.Bean;
@@ -14,9 +15,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.formation.events.enums.RoleEnum;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -43,15 +46,14 @@ public class WebSecurityConfig {
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
+        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
         .csrf(csrf -> csrf.disable())
         .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/api/auth/**").permitAll()
             .requestMatchers("/h2-console/**").permitAll()
-            .anyRequest().authenticated()
-
-        );
+            .anyRequest().authenticated());
 
     http.exceptionHandling(exception -> exception
         .authenticationEntryPoint((request, response, authException) -> {
@@ -77,4 +79,45 @@ public class WebSecurityConfig {
     return http.build();
   }
 
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+
+    // Permettre les origines Angular (dev et prod)
+    configuration.setAllowedOriginPatterns(Arrays.asList(
+        "http://localhost:4200", // Angular dev
+        "http://localhost:3000", // Alternative dev port
+        "https://localhost:4200" // HTTPS dev
+    ));
+
+    // Méthodes HTTP autorisées
+    configuration.setAllowedMethods(Arrays.asList(
+        "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+
+    // Headers autorisés
+    configuration.setAllowedHeaders(Arrays.asList(
+        "Authorization",
+        "Content-Type",
+        "X-Requested-With",
+        "Accept",
+        "Origin",
+        "Access-Control-Request-Method",
+        "Access-Control-Request-Headers"));
+
+    // Headers exposés au client
+    configuration.setExposedHeaders(Arrays.asList(
+        "Authorization",
+        "Set-Cookie"));
+
+    // Permettre les cookies et credentials
+    configuration.setAllowCredentials(true);
+
+    // Durée de cache pour les preflight requests
+    configuration.setMaxAge(3600L);
+
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+
+    return source;
+  }
 }
