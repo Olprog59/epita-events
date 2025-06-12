@@ -15,8 +15,14 @@ public interface IUserService {
 
   UserEntity inscription(UserEntity user) throws Exception;
 
+  UserEntity update(UserEntity user) throws Exception;
+
   void deleteById(Long id) throws Exception;
 
   void deleteByEmail(String email) throws Exception;
+
+  void generateVerificationToken(UserEntity user);
+
+  Optional<UserEntity> getUserByEmailToken(String token);
 
 }

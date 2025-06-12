@@ -1,5 +1,7 @@
 package com.formation.events.controllers;
 
+import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +17,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -80,7 +83,16 @@ public class AuthController {
     UserEntity user = UserMapper.mapUserRegisterReqDTOToEntity(userDTORegister);
     try {
       user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+      // generation du token email pour l'envoi d'email
+      userService.generateVerificationToken(user);
+
+      // sauvegarde de l'Utilisateur dans la BDD
       userService.inscription(user);
+
+      // envoi de l'email
+      emailService.sendVerificationEmail(user.getEmail(), user.getEmailToken());
+
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
           .body(new ApiResponseDTO(HttpStatus.NOT_ACCEPTABLE.toString(), e.getMessage()));
@@ -112,10 +124,48 @@ public class AuthController {
         .body(new ApiResponseDTO("200", "Déconnexion OK"));
   }
 
-  @GetMapping("/test-email")
-  public ResponseEntity<?> testSendEmail() {
-    UUID uuid = UUID.randomUUID();
-    emailService.sendVerificationEmail("samuel.michaux@gmail.com", uuid.toString());
-    return ResponseEntity.ok().build();
+  /*
+   * @GetMapping("/test-email")
+   * public ResponseEntity<?> testSendEmail() {
+   * UUID uuid = UUID.randomUUID();
+   * emailService.sendVerificationEmail("samuel.michaux@gmail.com",
+   * uuid.toString());
+   * return ResponseEntity.ok().build();
+   * }
+   */
+
+  @GetMapping("/verify-email/{token}")
+  public ResponseEntity<?> verifyEmail(@PathVariable String token) {
+    try {
+      Optional<UserEntity> userOp = userService.getUserByEmailToken(token);
+
+      if (userOp.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT)
+            .body(new ApiResponseDTO(HttpStatus.I_AM_A_TEAPOT.toString(), "Utilisateur non trouvé"));
+      }
+
+      UserEntity user = userOp.get();
+
+      if (user.getEmailVerified()) {
+        return ResponseEntity.ok(new ApiResponseDTO("200", "Email déjà vérifié"));
+      }
+
+      if (user.getVerificationTokenExpiredAt() != null
+          && user.getVerificationTokenExpiredAt().isBefore(LocalDateTime.now())) {
+        userService.deleteById(user.getId());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDTO("400", "Email Token expiré"));
+      }
+
+      user.setEmailVerified(true);
+      user.setEmailToken(null);
+      user.setVerificationTokenExpiredAt(null);
+      userService.update(user);
+
+      return ResponseEntity.ok(new ApiResponseDTO("200", "Email vérifié avec succès"));
+
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body(new ApiResponseDTO("500", "Erreur: " + e.getMessage()));
+    }
   }
 }

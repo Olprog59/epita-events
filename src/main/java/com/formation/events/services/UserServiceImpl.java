@@ -1,7 +1,9 @@
 package com.formation.events.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -60,6 +62,14 @@ public class UserServiceImpl implements IUserService {
   }
 
   @Override
+  public UserEntity update(UserEntity user) throws Exception {
+    if (userRepository.existsByEmail(user.getEmail())) {
+      return userRepository.save(user);
+    }
+    throw new Exception("Utilisateur n'existe pas");
+  }
+
+  @Override
   public void deleteById(Long id) throws Exception {
     if (id == null || id <= 0) {
       throw new Exception("id non correct");
@@ -74,6 +84,18 @@ public class UserServiceImpl implements IUserService {
       throw new Exception("email vide");
     }
     userRepository.deleteByEmail(email);
+  }
+
+  @Override
+  public void generateVerificationToken(UserEntity user) {
+    String token = UUID.randomUUID().toString();
+    user.setEmailToken(token);
+    user.setVerificationTokenExpiredAt(LocalDateTime.now().plusMinutes(1));
+  }
+
+  @Override
+  public Optional<UserEntity> getUserByEmailToken(String token) {
+    return userRepository.findByEmailToken(token);
   }
 
 }

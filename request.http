@@ -22,7 +22,7 @@ Accept: application/json
 Content-Type: application/json
 
 {
- "email": "samuel.michaux@ik.me",
+ "email": "samuel.michaux@gmail",
  "password": "Sam12345$",
  "firstName": "Samuel",
  "lastName": "Michaux"
@@ -34,10 +34,9 @@ Accept: application/json
 Content-Type: application/json
 
 {
- "email": "samuel.michaux@ik.me",
+ "email": "samuel.michaux@gmail",
  "password": "Sam12345$"
 }
-# @curl-global-cookie-jar cookies.txt
 
 ###
 
