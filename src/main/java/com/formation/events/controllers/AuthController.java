@@ -1,6 +1,8 @@
 package com.formation.events.controllers;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -30,6 +32,9 @@ import com.formation.events.security.jwt.JwtProvider;
 import com.formation.events.services.IEmailService;
 import com.formation.events.services.IUserService;
 
+import io.github.bucket4j.Bandwidth;
+import io.github.bucket4j.Bucket;
+import io.github.bucket4j.Refill;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -47,9 +52,23 @@ public class AuthController {
   @Value("${app.cookie.name:jwt_token}")
   private String cookieName;
 
+  private final Bucket loginBucket = Bucket.builder()
+      .addLimit(limit -> limit.capacity(5).refillIntervally(1, Duration.ofSeconds(15)))
+      .build();
+
+  // [T T T T T]
+  // [T T T T]
+  // [T T T]
+  // [T T]
+  // [T]
+  // [] => false (rate limit ok)
   @PostMapping(value = "/login")
   public ResponseEntity<ApiResponseDTO> login(@Valid @RequestBody UserLoginDTO userDto) {
     try {
+      if (!loginBucket.tryConsume(1)) {
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(new ApiResponseDTO(
+            HttpStatus.TOO_MANY_REQUESTS.toString(), "Trop de tentatives, réessayer dans quelques secondes"));
+      }
       final Authentication authentication = authenticationManager.authenticate(
           new UsernamePasswordAuthenticationToken(userDto.email(), userDto.password()));
 
