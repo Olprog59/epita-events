@@ -1,6 +1,7 @@
 package com.formation.events.security;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -8,6 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,6 +35,14 @@ public class JwtFilter extends OncePerRequestFilter {
 
   @Value("${app.cookie.name:jwt_token}")
   private String cookieName;
+
+  @Override
+  protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    String path = request.getRequestURI();
+    AntPathMatcher pathMatcher = new AntPathMatcher();
+
+    return PublicRoutes.PUBLIC_PATHS.stream().anyMatch(pattern -> pathMatcher.match(pattern, path));
+  }
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)

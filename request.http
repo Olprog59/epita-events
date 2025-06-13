@@ -21,6 +21,8 @@ POST {{path}}/auth/register
 Accept: application/json
 Content-Type: application/json
 
+# @curl-global-cookie cookies.txt
+
 {
  "email": "samuel.michaux@gmail",
  "password": "Sam12345$",

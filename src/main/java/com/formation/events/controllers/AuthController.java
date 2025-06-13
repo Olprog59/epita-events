@@ -2,7 +2,6 @@ package com.formation.events.controllers;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -10,12 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -57,6 +54,14 @@ public class AuthController {
           new UsernamePasswordAuthenticationToken(userDto.email(), userDto.password()));
 
       if (authentication.isAuthenticated()) {
+
+        UserEntity user = userService.getUserByEmail(userDto.email()).orElse(null);
+
+        if (user != null && !user.getEmailVerified()) {
+          return ResponseEntity.status(401)
+              .body(new ApiResponseDTO("401", "Email non vérifié. Vérifiez dans votre boite mail."));
+        }
+
         String token = jwtProvider.generateToken(authentication);
 
         ResponseCookie jwtCookie = ResponseCookie.from(cookieName, token)
@@ -72,7 +77,7 @@ public class AuthController {
             .body(new ApiResponseDTO("200", "Bearer " + token));
       }
 
-    } catch (BadCredentialsException e) {
+    } catch (Exception e) {
       return ResponseEntity.status(401).body(new ApiResponseDTO("401", "Les informations ne sont pas correctes"));
     }
     return ResponseEntity.badRequest().body(new ApiResponseDTO("400", "Probleme requete"));
